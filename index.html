@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentACar Pakistan - Car Rental & Train Booking</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover no-repeat fixed;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ff6b35;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,107,53,0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.9);
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            transform: translateY(-3px);
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color:transparent;
+            background-clip: text;
+        }
+
+        /* Car Rental Section */
+        .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .car-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .car-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .car-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .car-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ff6b35;
+            margin: 1rem 0;
+        }
+
+        /* ========== CAR BOOKING FORM STYLES ========== */
+        .car-booking-form {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+            background: rgba(255,255,255,0.98);
+            border-radius: 10px;
+            margin-top: 1rem;
+            padding: 0 1rem;
+        }
+
+        .car-booking-form.active {
+            max-height: 900px;
+            padding: 1.9rem;
+        }
+
+        .booking-form-group {
+            margin-bottom: 1rem;
+        }
+
+        .booking-form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .booking-form-group input,
+        .booking-form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .booking-form-group input:focus,
+        .booking-form-group select:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Train Booking Form */
+        .train-form {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background: #25D366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 100;
+            animation: whatsapp-bounce 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background: #128C7E;
+            text-decoration: none;
+            color: white;
+        }
+
+        @keyframes whatsapp-bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cars-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Train Stations List */
+        .stations {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .station-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            list-style: none;
+        }
+
+        .station-list li {
+            background: rgba(255,255,255,0.9);
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .station-list li:hover {
+            background: #ff6b35;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">🚗 M.A RENT A CAR </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#cars">Cars</a></li>
+                <li><a href="#trains">Train Tickets</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Welcome to M.A RentACar Pakistan</h1>
+            <p>Best Car Rental & Pakistani Railway Booking Platform</p>
+            <div class="cta-buttons">
+                <a href="#cars" class="btn btn-primary">Rent a Car</a>
+                <a href="#trains" class="btn btn-secondary">Book Train</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Car Rental Section -->
+    <section id="cars" class="container">
+        <h2 class="section-title">Choose Your Car</h2>
+        <div class="cars-grid">
+            <div class="car-card">
+                <img src="caroola white.webp" alt="Toyota Corolla" class="car-image">
+                <h3>TOYOTA CAROLLA</h3>
+                <h3>4 Seater</h3>
+                <h3>PETROL</h3>
+                <h3>AC</h3>
+                <div class="car-price">5000<span>/day</span></div>
+                <button class="btn btn-primary" onclick="toggleCarForm(this, 'Toyota Corolla')">
+                    <i class="fas fa-calendar-plus"></i> Book Now
+                </button>
+                
+                <!-- CAR BOOKING FORM -->
+                <form class="car-booking-form" data-car="Toyota Corolla">
+                    <div class="booking-form-group">
+                        <label><i class="fas fa-user"></i> Your Name</label>
+                        <input type="text" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="booking-form-group">
+                            <label><i class="fas fa-phone"></i> Phone</label>
+                            <input type="tel" placeholder="03XX-XXXXXXX" required>
+                        </div>
+                        
+                        <div class="booking-form-group">
+                            <label><i class="fas fa-calendar"></i> Pickup Date</label>
+                            <input type="date" required>
+                        </div>
+                    </div>
+                    <div class="booking-form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Pickup Location</label>
+                        <div class="booking-form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Drop off Location</label>
+                        <input type="text" placeholder="e.g. Gulshan-e-Iqbal, Karachi" required>
+                    </div>
+                        <input type="text" placeholder="e.g. Gulshan-e-Iqbal, Karachi" required>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-primary btn-small">
+                            <i class="fab fa-whatsapp"></i> Send Booking
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="toggleCarForm(this.parentElement.parentElement.parentElement)">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="car-card">
+                <img src="alto white.webp" alt="Suzuki Alto" class="car-image">
+                <h3>SUZUKI ALTO</h3>
+                <h3>4 Seater</h3>
+                <h3>PETROL</h3>
+                <h3>AC</h3>
+                <div class="car-price">3500<span>/day</span></div>
+                <button class="btn btn-primary" onclick="toggleCarForm(this, 'Suzuki Alto')">
+                    <i class="fas fa-calendar-plus"></i> Book Now
+                </button>
+                
+                <!-- CAR BOOKING FORM -->
+                <form class="car-booking-form" data-car="Suzuki Alto">
+                    <div class="booking-form-group">
+                        <label><i class="fas fa-user"></i> Your Name</label>
+                        <input type="text" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="booking-form-group">
+                            <label><i class="fas fa-phone"></i> Phone</label>
+                            <input type="tel" placeholder="03XX-XXXXXXX" required>
+                        </div>
+                        <div class="booking-form-group">
+                            <label><i class="fas fa-calendar"></i> Pickup Date</label>
+                            <input type="date" required>
+                        </div>
+                    </div>
+                    <div class="booking-form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Pickup Location</label>
+                        <input type="text" placeholder="e.g. Gulshan-e-Iqbal, Karachi" required>
+                    </div>
+                    <div class="booking-form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Drop off Location</label>
+                        <input type="text" placeholder="e.g. Gulshan-e-Iqbal, Karachi" required>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-primary btn-small">
+                            <i class="fab fa-whatsapp"></i> Send Booking
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="toggleCarForm(this.parentElement.parentElement.parentElement)">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="car-card">
+                <img src="WAGON R.webp" alt="Suzuki Wagon R" class="car-image">
+                <h3>SUZUKI WAGON R</h3>
+                <h3>4 Seater</h3>
+                <h3>PETROL</h3>
+                <h3>AC</h3>
+                <div class="car-price">3000<span>/day</span></div>
+                <button class="btn btn-primary" onclick="toggleCarForm(this, 'Suzuki Wagon R')">
+                    <i class="fas fa-calendar-plus"></i> Book Now
+                </button>
+                
+                <!-- CAR BOOKING FORM -->
+                <form class="car-booking-form" data-car="Suzuki Wagon R">
+                    <div class="booking-form-group">
+                        <label><i class="fas fa-user"></i> Your Name</label>
+                        <input type="text" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="booking-form-group">
+                            <label><i class="fas fa-phone"></i> Phone</label>
+                            <input type="tel" placeholder="03XX-XXXXXXX" required>
+                        </div>
+                        <div class="booking-form-group">
+                            <label><i class="fas fa-calendar"></i> Pickup Date</label>
+                            <input type="date" required>
+                        </div>
+                    </div>
+                    <div class="booking-form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Pickup Location</label>
+                        <input type="text" placeholder="e.g. Gulshan-e-Iqbal, Karachi" required>
+                    </div>
+                    <div class="booking-form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Drop off Location</label>
+                        <input type="text" placeholder="e.g. Gulshan-e-Iqbal, Karachi" required>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-primary btn-small">
+                            <i class="fab fa-whatsapp"></i> Send Booking
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="toggleCarForm(this.parentElement.parentElement.parentElement)">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="car-card">
+                <img src="FORTUNER.webp" alt="Toyota Fortuner" class="car-image">
+                <h3>TOYOTA FORTUNER</h3>
+                <h3>4 Seater</h3>
+                <h3>PETROL</h3>
+                <h3>AC</h3>
+                <div class="car-price">10000<span>/day</span></div>
+                <button class="btn btn-primary" onclick="toggleCarForm(this, 'Toyota Fortuner')">
+                    <i class="fas fa-calendar-plus"></i> Book Now
+                </button>
+                
+                <!-- CAR BOOKING FORM -->
+                <form class="car-booking-form" data-car="Toyota Fortuner">
+                    <div class="booking-form-group">
+                        <label><i class="fas fa-user"></i> Your Name</label>
+                        <input type="text" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="booking-form-group">
+                            <label><i class="fas fa-phone"></i> Phone</label>
+                            <input type="tel" placeholder="03XX-XXXXXXX" required>
+                        </div>
+                        <div class="booking-form-group">
+                            <label><i class="fas fa-calendar"></i> Pickup Date</label>
+                            <input type="date" required>
+                        </div>
+                    </div>
+                    <div class="booking-form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Pickup Location</label>
+                        <input type="text" placeholder="e.g. Gulshan-e-Iqbal, Karachi" required>
+                    </div>
+                    <div class="booking-form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Drop off Location</label>
+                        <input type="text" placeholder="e.g. Gulshan-e-Iqbal, Karachi" required>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-primary btn-small">
+                            <i class="fab fa-whatsapp"></i> Send Booking
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="toggleCarForm(this.parentElement.parentElement.parentElement)">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Train Booking Section -->
+    <section id="trains" style="background: rgba(0,0,0,0.3); color: white;">
+        <div class="container">
+            <h2 class="section-title">Pakistan Railway Ticket Booking</h2>
+            <div class="train-form">
+                <form id="trainForm">
+                    <div class="form-group">
+                        <label>From Station:</label>
+                        <select id="fromStation" required>
+                            <option value="">Select Station</option>                           
+<option value="karachi-cantt">1. Karachi Cantt</option>
+<option value="drigh-road">2. Drigh Road</option>
+<option value="landhi">3. Landhi</option>
+<option value="jungshahi">4. Jungshahi</option>
+<option value="kotri-jn">5. Kotri Jn</option>
+<option value="hyderabad-jn">6. Hyderabad Jn</option>
+<option value="tando-adam">7. Tando Adam</option>
+<option value="shahdapur-jn">8. Shahdapur Jn</option>
+<option value="nawabshah-jn">9. Nawabshah Jn</option>
+<option value="bhutto">10. Bhutto</option>
+<option value="mehrabpur-jn">11. Mehrabpur Jn</option>
+<option value="rohi-jn">12. Rohri Jn</option>
+<option value="sukkur">13. Sukkur</option>
+<option value="shikarpur">14. Shikarpur</option>
+<option value="jacobabad-jn">15. Jacobabad Jn</option>
+<option value="dera-ghazi-khan">16. Dera Ghazi Khan</option>
+<option value="kot-adu-jn">17. Kot Adu Jn</option>
+<option value="multan-cantt">18. Multan Cantt</option>
+<option value="khanewal-jn">19. Khanewal Jn</option>
+<option value="raiwind-jn">20. Raiwind Jn</option>
+<option value="lahore-jn">21. Lahore Jn</option>
+<option value="gujranwala">22. Gujranwala</option>
+<option value="wazirabad-jn">23. Wazirabad Jn</option>
+<option value="gujrat">24. Gujrat</option>
+<option value="jhelum">25. Jhelum</option>
+<option value="rawalpindi">26. Rawalpindi</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>To Station:</label>
+                        <select id="toStation" required>
+                            <option value="">Select Station</option>
+<option value="rawalpindi">26. Rawalpindi</option>
+<option value="jhelum">25. Jhelum</option>
+<option value="gujrat">24. Gujrat</option>
+<option value="wazirabad-jn">23. Wazirabad Jn</option>
+<option value="gujranwala">22. Gujranwala</option>
+<option value="lahore-jn">21. Lahore Jn</option>
+<option value="raiwind-jn">20. Raiwind Jn</option>
+<option value="khanewal-jn">19. Khanewal Jn</option>
+<option value="multan-cantt">18. Multan Cantt</option>
+<option value="kot-adu-jn">17. Kot Adu Jn</option>
+<option value="dera-ghazi-khan">16. Dera Ghazi Khan</option>
+<option value="jacobabad-jn">15. Jacobabad Jn</option>
+<option value="shikarpur">14. Shikarpur</option>
+<option value="sukkur">13. Sukkur</option>
+<option value="rohi-jn">12. Rohri Jn</option>
+<option value="mehrabpur-jn">11. Mehrabpur Jn</option>
+<option value="bhutto">10. Bhutto</option>
+<option value="nawabshah-jn">9. Nawabshah Jn</option>
+<option value="shahdapur-jn">8. Shahdapur Jn</option>
+<option value="tando-adam">7. Tando Adam</option>
+<option value="hyderabad-jn">6. Hyderabad Jn</option>
+<option value="kotri-jn">5. Kotri Jn</option>
+<option value="jungshahi">4. Jungshahi</option>
+<option value="landhi">3. Landhi</option>
+<option value="drigh-road">2. Drigh Road</option>
+<option value="karachi-cantt">1. Karachi Cantt</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Journey Date:</label>
+                        <input type="date" id="journeyDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Passengers:</label>
+                        <select id="passengers" required>
+                            <option value="1">1 Passenger</option>
+                            <option value="2">2 Passengers</option>
+                            <option value="3">3 Passengers</option>
+                            <option value="4">4 Passengers</option>
+                            <option value="5">5 Passengers</option>
+                            <option value="6">6 Passengers</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Class:</label>
+                        <select id="trainClass" required>
+                            <option value="Economy">Economy</option>
+                            <option value="AC Standard">AC Standard</option>
+                            <option value="AC Business">AC Business</option>
+                            <option value="First Class">First Class</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Search Trains</button>
+                </form>
+            </div>
+
+            <div class="stations">
+                <h3 style="text-align: center; margin-bottom: 1rem;">Popular Stations</h3>
+                <ul class="station-list" id="stationList"></ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/+923233301183?text=Hi!%20I%20want%20to%20rent%20a%20car%20or%20book%20train%20ticket" 
+       class="whatsapp-float" target="_blank" title="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        // ========== CAR BOOKING FORM FUNCTIONS ==========
+        function toggleCarForm(button, carName) {
+            const form = button.nextElementSibling;
+            const card = button.closest('.car-card');
+            
+            // Toggle form
+            form.classList.toggle('active');
+            
+            // Rotate button icon
+            const icon = button.querySelector('i');
+            if (form.classList.contains('active')) {
+                icon.className = 'fas fa-calendar-times';
+                button.innerHTML = '<i class="fas fa-calendar-times"></i> Close Form';
+                // Set today's date as minimum
+                const dateInput = form.querySelector('input[type="date"]');
+                if (dateInput) {
+                    const today = new Date().toISOString().split('T')[0];
+                    dateInput.min = today;
+                    dateInput.focus();
+                }
+            } else {
+                icon.className = 'fas fa-calendar-plus';
+                button.innerHTML = '<i class="fas fa-calendar-plus"></i> Book Now';
+            }
+        }
+
+        // Handle all car booking forms
+        document.addEventListener('submit', function(e) {
+            if (e.target.classList.contains('car-booking-form')) {
+                e.preventDefault();
+                
+                const form = e.target;
+                const carName = form.dataset.car;
+                const inputs = form.querySelectorAll('input, select');
+                let message = `🚗 *${carName}* - NEW BOOKING REQUEST\n\n`;
+                
+                inputs.forEach(input => {
+                    if (input.value) {
+                        let label = input.previousElementSibling ? input.previousElementSibling.textContent.trim() : '';
+                        message += `${label}: ${input.value}\n`;
+                    }
+                });
+                
+                message += `\n📱 Contact karo jaldi!`;
+                
+                const whatsappUrl = `https://wa.me/+923233301183?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+                
+                // Close form after sending
+                const button = form.previousElementSibling;
+                toggleCarForm(button, carName);
+                
+                alert('✅ Booking WhatsApp pe bhej di gayi! Ab reply ka wait karo 🚀');
+            }
+        });
+
+        // Pakistani Railway Stations
+        const stations = [
+            'Karachi Cantt', 'Lahore', 'Rawalpindi', 'Islamabad', 'Faisalabad',
+            'Multan', 'Sialkot', 'Gujranwala', 'Peshawar', 'Quetta',
+            'Hyderabad', 'Sukkur', 'Nawabshah', 'Mirpur Khas', 'Rohri'
+        ];
+
+        // Populate stations
+        function populateStations() {
+            const fromStation = document.getElementById('fromStation');
+            const toStation = document.getElementById('toStation');
+            const stationList = document.getElementById('stationList');
+
+            stations.forEach(station => {
+                fromStation.innerHTML += `<option value="${station}">${station}</option>`;
+                toStation.innerHTML += `<option value="${station}">${station}</option>`;
+                
+                stationList.innerHTML += `
+                    <li onclick="selectStation('${station}')">${station}</li>
+                `;
+            });
+        }
+
+        function selectStation(station) {
+            document.getElementById('fromStation').value = station;
+            const nextStations = ['Lahore', 'Karachi Cantt', 'Rawalpindi'];
+            const randomNext = nextStations[Math.floor(Math.random() * nextStations.length)];
+            document.getElementById('toStation').value = randomNext;
+        }
+
+        // Train Form Submit
+        document.getElementById('trainForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const message = `🚂 Train Booking Request:\nFrom: ${formData.get('fromStation')}\nTo: ${formData.get('toStation')}\nDate: ${formData.get('journeyDate')}\nPassengers: ${formData.get('passengers')}\nClass: ${formData.get('trainClass')}`;
+            
+            const whatsappUrl = `https://wa.me/+923233301183?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            alert('Redirecting to WhatsApp for booking confirmation!');
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Set today's date as minimum for train
+        document.getElementById('journeyDate').min = new Date().toISOString().split('T')[0];
+
+        // Initialize
+        window.onload = function() {
+            populateStations();
+        };
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255,255,255,0.98)';
+            } else {
+                header.style.background = 'rgba(255,255,255,0.95)';
+            }
+        });
+    </script>
+</body>
+</html>
