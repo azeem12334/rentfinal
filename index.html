@@ -379,6 +379,8 @@
         }
     </style>
 </head>
+    <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#ff6b35">
 
 <body>
     <!-- Header -->
@@ -834,5 +836,10 @@
             }
         });
     </script>
+    <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
 </body>
 </html>
